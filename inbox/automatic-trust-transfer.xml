@@ -43,33 +43,33 @@
 	<p>
 		ATT is used for automatically establishing secure channels protected against active attacks between a new device and existing ones after a single mutual manual authentication between the new device and one of the existing ones.
 		It preserves the security level as if all devices had authenticated their keys manually.
-		A trusted third party is not required since a usual OMEMO message is used for transferring the information needed to authenticate a key or revoke the trust in that key.
+		A trusted third party is not required since an ordinary OMEMO message is used for transferring the information needed to authenticate an identity key or revoke the trust in that key.
 		Additionally, it preserves the anonymity of the authentication and revocation since those messages are only sent to devices with authenticated keys.
 		That means an attacker cannot detect whether an authentication or revocation took place.
 	</p>
 	<p>
-		End-to-end encryption without verifying the authenticity of the keys enables users to protect their communication against passive attacks.
-		This means an attacker cannot read the transferred messages without manipulating the exchanged keys.
-		But without any other precautions active attacks are still possible.
-		If an attacker replaces the exchanged keys with a malicious key, the end-to-end encrypted messages can be read and manipulated by the attacker.
+		End-to-end encryption without verifying the authenticity of either parties keys only allows users to protect their communication against passive attacks.
+		This means an attacker cannot read transferred messages without actively intervening in the process of the key exchange.
+		However without any other precautions active attacks are still possible.
+		If an attacker replaces the exchanged keys with malicious keys, the end-to-end encrypted messages can be read and manipulated by the attacker (Man-in-the-Middle-Attack).
 	</p>
 	<p>
 		When using &xep0384;, a public identity key is transmitted over a channel which is not protected against active attacks.
 		That key has to be authenticated by the receiving device over a channel which is protected against active attacks to maintain the confidentiality of sent OMEMO messages and ensuring the authenticity and integrity of received OMEMO messages.
 	</p>
 	<p>
-		When using OMEMO, each device has a different identity key.
-		That makes it possible for new devices to use end-to-end encryption protecting against passive attacks without transmitting the private key over a secure channel from an existing device to the new one.
-		However, the downside of this approach is that it increases the number of authentications.
-		Without ATT all authentications have to be done manually.
-		With ATT though, only one mutal manual authentication per new key is required.
+		When using OMEMO, each device has a unique identity key which is generated once the device goes online for the first time.
+		For that reason it is not necessary to copy an existing secret identity key over from another device to be able to use end-to-end encryption.
+		However, the downside of this approach is that it increases the number of authentications that a user has to do when they add a new device (n+1).
+		Without ATT all n mutual authentications have to be done manually.
+		With ATT though, only one manual mutual authentication is required.
 	</p>
 </section1>
 <section1 topic='Glossary' anchor='glossary'>
 	<dl>
 		<di>
 			<dt>OMEMO message</dt>
-			<dd>Message encrypted with OMEMO</dd>
+			<dd>Message encrypted using OMEMO</dd>
 		</di>
 		<di>
 			<dt>Device</dt>
@@ -85,7 +85,7 @@
 		</di>
 		<di>
 			<dt>Key authentication</dt>
-			<dd>Verifying that a key received over an insecure channel is actually the one of the assumed device</dd>
+			<dd>The process of verifying that a key received over an insecure channel is actually the one of the assumed device</dd>
 		</di>
 		<di>
 			<dt>Manual key authentication</dt>
@@ -97,11 +97,11 @@
 		</di>
 		<di>
 			<dt>Mutual key authentication</dt>
-			<dd>Key authentication in which two devices authenticate the key of each other</dd>
+			<dd>Key authentication in which two devices authenticate each others keys</dd>
 		</di>
 		<di>
 			<dt>Key revocation</dt>
-			<dd>Revoking the trust in a key</dd>
+			<dd>Revoking trust in a key</dd>
 		</di>
 		<di>
 			<dt>Manual key revocation</dt>
@@ -124,18 +124,13 @@
 </section1>
 <section1 topic='Advantages' anchor='advantages'>
 	<p>
-		The goal of key authentication is to create an end-to-end encrypted communication network exclusively of devices with authenticated keys.
+		The goal of key authentication is to create an end-to-end encrypted communications network exclusively of devices with authenticated keys.
 		As a result every communication channel between those devices is resistant against active attacks.
 	</p>
 	<p>
-		The network of devices which authenticated each other's keys can be seen as a complete graph with each device as a node and each mutual authentication as an edge.
+		The network of devices which authenticated each other's keys can be seen as a complete graph where each device is a node and each mutual authentication is an edge.
 		The number of edges grows for each new device by the number of existing nodes.
-		That means to sustain a secure communication across all devices, a new key has to be authenticated by all n existing devices and vice versa.
-	</p>
-	<p>
-		One of those n mutual authentications requires user interaction like scanning each other's QR codes or comparing each other's key identifiers by hand.
-		That is the initial mutual manual authentication.
-		The remaining authentications can be automated relying on the secure channel established by the inital mutual manual authentication and the secure channels already created by the same procedure between the rest of the devices.
+		This is due to the fact, that in order to sustain secure communication across all devices, a new key has to be authenticated by all n existing devices and vice versa.
 	</p>
 	<p>
 		For creating the described complete graph with n nodes, a total of T(n) = (n*(n-1))/2 ∊ O(n²) mutual authentications are needed.
@@ -143,25 +138,31 @@
 		All remaining authentications can be performed automatically.
 		Thus, less user interaction is needed for authenticating all keys involved in the secure communication while preserving the same security level.
 	</p>
+	<p>
+		Using ATT, only one manual mutual authentication between the new device and one existing device is required.
+		It requires user interaction like scanning each QR codes of both devices or comparing each other's key identifiers by hand.
+		This is the initial mutual manual authentication.
+		The remaining n-1 authentications are automated relying on the secure channel established by the inital mutual manual authentication and the secure channels already created by the same procedure between the rest of the devices.
+	</p>
 </section1>
 <section1 topic='General Procedure' anchor='general-procedure'>
 	<p>
 		This section explains the basic procedure of autmomatically authenticating or revoking a key by a trust message.
 		It does not specify the detailed behaviour which can be found in section <link url='#usecases'>Use Cases</link>.
-		Instead, this section should rather show the fundamental idea behind it.
+		Instead, this section should rather show the fundamental idea behind Automatic Trust Transfer.
 	</p>
 	<section2 topic='Authentication' anchor='general-procedure-authentication'>
 		<ol>
 			<li>
 				<p>
 					Device 1 manually authenticates the key of device 2.
-					Device 1 automatically sends an authentication message for device 2's key to devices whose keys it has already authenticated and an authentication message for the keys of those devices to device 2.
+					Device 1 automatically sends an authentication message for device 2's key to devices whose keys it has already authenticated and another authentication message for the keys of those devices to device 2.
 				</p>
 			</li>
 			<li>
 				<p>
 					Device 2 manually authenticates the key of device 1.
-					Device 2 automatically sends an authentication message for device 1's key to devices whose keys it has already authenticated and an authentication message for the keys of those devices to device 1.
+					Device 2 automatically sends an authentication message for device 1's key to devices whose keys it has already authenticated and another authentication message for the keys of those devices to device 1.
 				</p>
 			</li>
 			<li>
@@ -196,6 +197,9 @@
 	<example caption='Example of a Trust Message URI'><![CDATA[xmpp:user@example.org?omemo-trust;auth=623548d3835c6d33ef5cb680f7944ef381cf712bf23a0119dabe5c4f252cd02f;auth=d9f849b6b828309c5f2c8df4f38fd891887da5aaa24a22c50d52f69b4a80817e;revoke=b423f5088de9a924d51b31581723d850c7cc67d0a4fe6b267c3d301ff56d2413]]></example>
 </section1>
 <section1 topic='Use Cases' anchor='usecases'>
+	<p>
+		For the sake of an example, lets assume the following situation:
+	</p>
 	<p>
 		Alice would like to use OMEMO when communicating with Bob.
 		Alice has the devices A1, A2 and A3.
@@ -261,7 +265,7 @@
 				</li>
 			</ol>
 			<p>
-				MUST authenticate the key as soon as the key of the author of the authentication message is authenticated by the receiving device.
+				MUST authenticate the key as soon as the key of the sending device of the authentication message is authenticated by the receiving device.
 			</p>
 		</section3>
 	</section2>
