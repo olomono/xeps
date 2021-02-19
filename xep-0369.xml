@@ -1234,7 +1234,7 @@
 </message>
 ]]></example>
       <p>
-        The MIX channel then adds information to the message using a &lt;mix&gt; element qualified by the 'urn:xmpp:mix:core:1' namespace.  This enables are receiver of the MIX message to determine the message sender.  This element contains two child elements:
+        The MIX channel then adds information to the message using a &lt;mix&gt; element qualified by the 'urn:xmpp:mix:core:1' namespace.  This enables the receiver of the MIX message to determine the message's sender.  This element contains two child elements:
       </p>
       <ol>
         <li>A &lt;nick&gt; element that contains the Nick of the message sender, taken from the Participants Node.  This MUST be present if a Nick is defined for the user.</li>
