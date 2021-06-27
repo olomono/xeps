@@ -2,7 +2,7 @@
 
 <!--
 
-Copyright (c) 1999 - 2020 XMPP Standards Foundation
+Copyright (c) 1999 - 2021 XMPP Standards Foundation
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and
@@ -259,7 +259,7 @@ content: "XEP-<xsl:value-of select='/xep/header/number'/>";
             </ul></dd>
           </xsl:if>
           <dt>Copyright</dt>
-          <dd>&#169; 1999 &#x2013; 2020 XMPP Standards Foundation. <a href='#appendix-legal'>SEE LEGAL NOTICES</a>.</dd>
+          <dd>&#169; 1999 &#x2013; 2021 XMPP Standards Foundation. <a href='#appendix-legal'>SEE LEGAL NOTICES</a>.</dd>
           <dt>Status</dt>
           <dd>
             <p><xsl:value-of select='/xep/header/status'/></p>
@@ -1046,6 +1046,26 @@ content: "XEP-<xsl:value-of select='/xep/header/number'/>";
     <figure class='code'>
       <figcaption><xsl:value-of select='@caption'/></figcaption>
       <pre class='prettyprint'><xsl:apply-templates/></pre>
+    </figure>
+  </xsl:template>
+
+  <xsl:template match='cve'>
+    <figure class='cve'>
+      <figcaption>CVE-<xsl:value-of select='@id'/>
+	(<a><xsl:attribute name='href'>https://nvd.nist.gov/vuln/detail/CVE-<xsl:value-of select='@id'/></xsl:attribute>NIST</a>,
+	<a><xsl:attribute name='href'>https://cve.mitre.org/cgi-bin/cvename.cgi?name=<xsl:value-of select='@id'/></xsl:attribute>Mitre</a>)
+      </figcaption>
+      <xsl:choose>
+	<xsl:when test="@url != ''">
+	  <a>
+	    <xsl:attribute name='href'><xsl:value-of select='@url'/></xsl:attribute>
+	    <xsl:apply-templates/>
+	  </a>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:apply-templates/>
+	</xsl:otherwise>
+      </xsl:choose>
     </figure>
   </xsl:template>
 
