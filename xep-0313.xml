@@ -10,7 +10,7 @@
   <abstract>This document defines a protocol to query and control an archive of messages stored on a server.</abstract>
   &LEGALNOTICE;
   <number>0313</number>
-  <status>Proposed</status>
+  <status>Experimental</status>
   <lastcall>2021-03-30</lastcall>
   <lastcall>2017-11-15</lastcall>
   <type>Standards Track</type>
@@ -29,6 +29,22 @@
   </schemaloc>
   &mwild;
   &ksmith;
+	<revision>
+		<version>0.7.5</version>
+		<date>2021-09-24</date>
+		<initials>ka</initials>
+		<remark>
+			<p>End some sentences with full stop.</p>
+		</remark>
+	</revision>
+  <revision>
+    <version>0.7.4</version>
+    <date>2021-08-23</date>
+    <initials>ssw</initials>
+    <remark>
+      <p>Add implementation note about before/after and before-id/after-id</p>
+    </remark>
+  </revision>
   <revision>
     <version>0.7.3</version>
     <date>2021-03-02</date>
@@ -244,7 +260,7 @@
 	<p>Servers that expose archive messages of sent/received messages on behalf of local users MUST expose these archives to the user on the user's bare JID.</p>
 	</section3>
 	<section3 topic='MUC archives' anchor='archives_muc'>
-		<p>A MUC service allowing MAM queries for a room MUST expose the MAM archive on the room's bare JID</p>
+		<p>A MUC service allowing MAM queries for a room MUST expose the MAM archive on the room's bare JID.</p>
 	</section3>
 	</section2>
 	<section2 topic='Querying Entities' anchor='entities'>
@@ -403,7 +419,11 @@
     <section3 topic='Limiting results by id' anchor='query-limit-id'>
       <p>If the client has already seen some messages, it may choose to restrict its query to
       before and/or after messages it already knows about. This may be done through the 'before-id'
-      and 'after-id' fields.</p>
+      and 'after-id' fields.
+        In some cases 'before-id' and 'after-id' are the same as using RSM's
+        'before' and 'after' parameters. For more information, see the
+        <link url='#impl'>Implementation Considerations</link> section.
+      </p>
       <example caption='Querying the archive for all messages after a certain message'><![CDATA[
 <iq type='set' id='juliet1'>
   <query xmlns='urn:xmpp:mam:2'>
@@ -509,7 +529,7 @@
   </query>
 </iq>
 ]]></example>
-      <p>Note that as the 'with', 'start' and 'end' fields MUST be implemented by servers, clients are able to submit forms using combinations of only these fields without needing to first fetch the form from the server and the types of these fields MUST be 'jid-single', 'text-single' and 'text-single' respectively. A server MUST NOT rely on a client having first requested the form before submitting queries</p>
+      <p>Note that as the 'with', 'start' and 'end' fields MUST be implemented by servers, clients are able to submit forms using combinations of only these fields without needing to first fetch the form from the server and the types of these fields MUST be 'jid-single', 'text-single' and 'text-single' respectively. A server MUST NOT rely on a client having first requested the form before submitting queries.</p>
       <p>If a client includes a form field that the server does not recognise, the server MUST respond with a 'feature-not-implemented' error.</p>
     </section3>
   </section2>
@@ -731,12 +751,12 @@
   	<section3 topic="User Archives" anchor='business-storeret-user-archives'>
   		<p>A user archive is anticipated to provide the user with the ability to access their prior conversations. To this end, a server SHOULD include in a user archive all of the messages a user sends or receives of type 'normal' or 'chat' that contain a &lt;body&gt; element. A server SHOULD also include messages of type 'groupchat' that have a &lt;body&gt;, but where such history is accessible through another method (e.g. through an archive on the MUC JID), a server MAY exclude these from the archive. A server MAY include additional non-conversation messages. A server MAY include messages of type 'headline', but this is not generally suggested.</p>
   		<p>At a minimum, the server MUST store the &lt;body&gt; elements of a stanza. It is suggested that other elements that are used in a given deployment to supplement conversations (e.g. XHTML-IM payloads) are also stored. Other elements MAY be stored.</p>
-  		<p>If a server supports mechanisms that multiply copies of a stanza (e.g. Carbons, or forking a stanza to a bare JID), it MUST store such a staza within a given archive only once, irrespective of multiple connected clients receiving copies</p>
+  		<p>If a server supports mechanisms that multiply copies of a stanza (e.g. Carbons, or forking a stanza to a bare JID), it MUST store such a staza within a given archive only once, irrespective of multiple connected clients receiving copies.</p>
   	</section3>
   	<section3 topic="MUC Archives" anchor='business-storeret-muc-archives'>
   		<p>A MUC archives allows a user to view the conversation within a room. All messages sent to the room that contain a &lt;body&gt; element SHOULD be stored, as should subject change stanzas, apart from those messages that the room rejects.</p>
   		<p>A MUC archive MUST store each message only once (not, for example, every copy sent out to an occupant).</p>
-                <p>A MUC archive MUST NOT include 'private message' results (those sent directly between occupants, not shared in the room) in the results</p>
+                <p>A MUC archive MUST NOT include 'private message' results (those sent directly between occupants, not shared in the room) in the results.</p>
                 <p>A MUC archive MUST check that the user requesting the archive has the right to enter it at the time of the query and only allow access if so. In a members-only chat room, only owners, admins or members can query a room archive. In the case of open MUC rooms, the MUC archives can generally be accessed by any users (including those who have never entered the room) who do not have an affiliation of 'outcast', but a MUC archive MAY further limit access based on other criteria as part of the deployment policy. A MUC archive MAY, if it stores historical data about previous configuration states, limit the results returned to only those that the querying user would have been authorised to see at the time (e.g. it MAY limit the results to not include results while a user was an outcast).</p>
   		<p>When sending out the archives to a requesting client, the forwarded stanza MUST NOT have a 'to' attribute, and the 'from' MUST be the occupant JID of the sender of the archived message.</p>
                 <p>In the case of non-anonymous rooms or if the recipient of the MUC archive has the right to access the sender real JID at the time of the query, the archive message will use extended message information in an &lt;x/&gt; element qualified by the 'http://jabber.org/protocol/muc#user' namespace and containing an &lt;item/&gt; child with a 'jid' attribute specifying the occupant's full JID, as defined for non-anonymous room presence in &xep0045;. The archiving entity MUST strip any pre-existing &lt;x&gt; element from MUC messages (as MUC rooms are not required to do this).</p>
@@ -884,6 +904,29 @@
   <section2 topic='MUC message spoofing' anchor='security-muc-spoofing'>
     <p>This specification re-uses the &lt;x&gt; element from the 'http://jabber.org/protocol/muc#user' namespace to convey information about the sender of a message in a MUC room. However this element is not sanitized by MUC services, so the archiving entity MUST strip any existing &lt;x&gt; element in the 'http://jabber.org/protocol/muc#user' namespace from messages before archiving them (regardless of whether it adds in its own &lt;x&gt; element).</p>
   </section2>
+</section1>
+
+<section1 topic='Implementation Considerations' anchor='impl'>
+  <p>
+    Queries in the 'urn:xmpp:mam:2' namespace can be limited using the RSM
+    'before' and 'after' parameters.
+    Normally these are opaque identifiers that are not known until the results
+    of the first query are returned at which point they can be used to fetch
+    subsequent pages.
+    However, MAM specifically defines them as being equal to the archive ID,
+    meaning that an acceptable value can be known and used in the initial query.
+    This makes them equivalent to 'before-id' and 'after-id' defined in the
+    'urn:xmpp:mam:2#extended' namespace except for the following differences:
+  </p>
+  <ol>
+    <li>
+      The behavior of using RSM's 'before' and 'after' together is undefined,
+    </li>
+    <li>
+      And using 'before' implies paging backwards through the result set while
+      using 'before-id' does not.
+    </li>
+  </ol>
 </section1>
 
 <section1 topic='XMPP Registrar Considerations' anchor='registrar'>
