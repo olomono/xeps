@@ -45,6 +45,7 @@
 			<ul>
 				<li>Specify usage of Base64 encoding for key identifiers within trust messages</li>
 				<li>Specify usage of Base16 encoding for key identifiers within Trust Message URIs</li>
+				<li>Use Base64-encoded key identifiers in examples</li>
 				<li>Add 'hash value' as example of key identifier</li>
 				<li>Update OMEMO's namespace to 'urn:xmpp:omemo:2'</li>
 				<li>Update namespace to 'urn:xmpp:tm:1'</li>
@@ -293,7 +294,7 @@
 						</li>
 						<li>
 							MUST contain at least one <![CDATA[<trust/>]]> or <![CDATA[<distrust/>]]> direct child element indicating the trust respectively distrust in a key.
-							Each <![CDATA[<trust/>]]> and <![CDATA[<distrust/>]]> element MUST contain exactly one Base64-encoded key identifier.
+							Each <![CDATA[<trust/>]]> and <![CDATA[<distrust/>]]> element MUST contain exactly one Base64-encoded (see &rfc4648;) key identifier.
 							The kind of identifier that the key's encryption protocol specifies MUST be used.
 						</li>
 					</ul>
@@ -452,7 +453,7 @@
 				The <em>JID</em> attribute of the <![CDATA[<key-owner/>]]> element MUST be used as the Trust Message URI's path.
 				The first key-value pair of the URI's query MUST represent the <em>encryption</em> attribute of the <![CDATA[<trust-message/>]]> element.
 				All remaining key-value pairs of the URI's query MUST represent the <![CDATA[<trust/>]]> respectively <![CDATA[<distrust/>]]> elements of the <![CDATA[<key-owner/>]]> element.
-				Each key identifier MUST be Base16-encoded.
+				Each key identifier MUST be Base16-encoded (see &rfc4648;).
 				The key of a key-value pair MUST be the element's respectively attribute's name and the value their content.
 			</p>
       <example caption='Trust Message URI for Bob&apos;s OMEMO keys'><![CDATA[
