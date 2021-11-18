@@ -58,6 +58,19 @@
     <jid>jabber@larma.de</jid>
   </author>
   <revision>
+    <version>0.8.2</version>
+    <date>2021-12-12</date>
+    <initials>melvo</initials>
+    <remark>
+      <p>TODO:</p>
+      <ul>
+        <li>Replace link '#rules' by already used '#business-rules'</li>
+        <li>Replace 'PeyKeys' by 'PreKeys'</li>
+        <li>TODO</li>
+      </ul>
+    </remark>
+  </revision>
+  <revision>
     <version>0.8.1</version>
     <date>2021-10-07</date>
     <initials>melvo</initials>
@@ -135,7 +148,7 @@
     <version>0.3.0</version>
     <date>2018-07-31</date>
     <initials>egp</initials>
-    <remark><p>Make examples show items published to the id "current", as per <cite>XEP-0060</cite> §12.20.</p></remark>
+    <remark><p>Make examples show items published to the ID "current", as per <cite>XEP-0060</cite> §12.20.</p></remark>
   </revision>
   <revision>
     <version>0.2.2</version>
@@ -207,7 +220,7 @@
     <p>
       The general idea behind this protocol is to maintain separate,
       long-standing Double Ratchet-encrypted sessions with each device of each contact
-      (as well as with each of our other devices), which are used as secure key
+      (as well as with each own device), which are used as secure key
       transport channels. In this scheme, each message is encrypted with a
       fresh, randomly generated encryption key. An encrypted header is added to
       the message for each device that is supposed to receive it. These headers
@@ -248,7 +261,7 @@
   </ul>
   <p>OMEMO is not intended to protect against the following use cases:</p>
   <ul>
-    <li>An attacker has permanent access to your device. In this case, the attacker may extract decrypted messages from the device, eg. from the applications database. If the access is temporary, security will eventually be restored through break-in recovery.</li>
+    <li>An attacker has permanent access to your device. In this case, the attacker may extract decrypted messages from the device, e.g., from the applications database. If the access is temporary, security will eventually be restored through break-in recovery.</li>
     <li>You lost your device and an attacker can read messages on your notification screen.</li>
     <li>Any kind of denial-of-service attack.</li>
     <li>tbc</li>
@@ -258,16 +271,16 @@
   </p>
   <section2 topic='Threat Model' anchor='reqs-threat-model'>
     <p>The use case for OMEMO is a situation where the content of a conversation needs to be protected, but where the servers the message passes by can’t be trusted to keep the content of the message secret. For example when information that is under strict embargo needs to passed within an organization and the server administrator is not one of the persons cleared to see the information or when a couple is exchanging intimate messages and they want to avoid leaking of those messages to the server administrator.</p>
-    <p>The OMEMO protocol protects against passive and active attackers which are able to read, modify, replay, delay and delete messages. The OMEMO protocol does not protect against attackers who rely on metadata and traffic analysis. The quality of the verification of the conversation participants OMEMO identity keys determines the level of protection OMEMO offers.</p>
+    <p>The OMEMO protocol protects against passive and active attackers which are able to read, modify, replay, delay and delete messages. The OMEMO protocol does not protect against attackers who rely on metadata and traffic analysis. The quality of the verification of the conversation participants' OMEMO identity keys determines the level of protection OMEMO offers.</p>
   </section2>
 </section1>
 <section1 topic='Glossary' anchor='glossary'>
   <dl>
-    <di><dt>Device</dt><dd>A communication end point, i.e. a specific client instance</dd></di>
+    <di><dt>Device</dt><dd>A communication end point, i.e., a specific client instance</dd></di>
     <di><dt>OMEMO element</dt><dd>An &lt;encrypted&gt; element in the <tt>&ns;</tt> namespace</dd></di>
     <di><dt>Bundle</dt><dd>A collection of publicly accessible data used by the X3DH key agreement protocol that can be used to build a session with a device, namely its public IdentityKey, a signed PreKey with corresponding signature, and a list of (single use) PreKeys.</dd></di>
-    <di><dt>rid</dt><dd>The device id of the intended recipient of the containing &lt;key&gt;</dd></di>
-    <di><dt>sid</dt><dd>The device id of the sender of the containing OMEMO element</dd></di>
+    <di><dt>rid</dt><dd>The device ID of the intended recipient of the containing &lt;key&gt;</dd></di>
+    <di><dt>sid</dt><dd>The device ID of the sender of the containing OMEMO element</dd></di>
   </dl>
 </section1>
 <section1 topic='Protocol Definition' anchor='protocol'>
@@ -288,7 +301,7 @@
       <di><dt>time to keep the private key of the old signed PreKey after rotating it</dt><dd>The private key of the old signed PreKey SHOULD be kept for another rotation period as defined above, to account for delayed messages using the old signed PreKey.</dd></di>
       <di><dt>number of PreKeys to provide in the bundle</dt><dd>The bundle SHOULD always contain around 100 PreKeys.</dd></di>
       <di><dt>minimum number of PreKeys to provide in the bundle</dt><dd>The bundle MUST always contain at least 25 PreKeys.</dd></di>
-      <di><dt>usage of PeyKeys</dt><dd>All key exchanges MUST use a PreKey, key exchanges that don't use a PreKey MUST be rejected.</dd></di>
+      <di><dt>usage of PreKeys</dt><dd>All key exchanges MUST use a PreKey, key exchanges that don't use a PreKey MUST be rejected.</dd></di>
       <di><dt>associated data</dt><dd>The associated data is created by concatenating the IdentityKeys of Alice and Bob: <tt>AD = Encode(IK_A) || Encode(IK_B)</tt>. <tt>Alice</tt> is the party that <em>actively initiated</em> the key exchange, while <tt>Bob</tt> is the party that <em>passively accepted</em> the key exchange.</dd></di>
       <di><dt>XEdDSA</dt><dd>OMEMO does not mandate the usage of &xeddsa; with &x3dh; for the IdentityKey. Instead, there are three simple rules that implementations MUST follow:
         <ol>
@@ -384,7 +397,7 @@
 <section1 topic='Use Cases' anchor='usecases'>
   <section2 topic='Setup' anchor='usecases-setup'>
     <p>
-      To participate in OMEMO-encrypted chats, clients need to set up an OMEMO library and generate a device id, which is a randomly generated integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0). The device id must be unique for the account.
+      To participate in OMEMO-encrypted chats, clients need to set up an OMEMO library and generate a device ID, which is a randomly generated integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0). The device ID must be unique for the account.
     </p>
   </section2>
   <section2 topic='Discovering peer support' anchor='usecases-discovering'>
@@ -398,8 +411,8 @@
     <items node=']]>&nsdevices;<![CDATA['>
       <item id='current'>
         <devices xmlns=']]>&ns;<![CDATA['>
-          <device id='12345' />
-          <device id='4223' label='Gajim on Ubuntu Linux' />
+          <device id='12345'/>
+          <device id='4223' label='Gajim on Ubuntu Linux'/>
         </devices>
       </item>
     </items>
@@ -408,19 +421,19 @@
   </section2>
   <section2 topic='Announcing support' anchor='usecases-announcing'>
     <section3 topic='Device list' anchor='devices'>
-    <p>In order for other devices to be able to initiate a session with a given device, it first has to announce itself by adding its device id to the devices PEP node.</p>
-    <p>It is REQUIRED to set the access model of the <tt>&nsdevices;</tt> node to ‘open’ to give entities without presence subscription read access to the devices and allow them to establish an OMEMO session. Not having presence subscription is a common occurrence on the first few messages between two contacts and can also happen fairly frequently in group chats as not every participant had prior communication with every other participant.</p>
+    <p>In order for other devices to be able to initiate a session with a given device, it first has to announce itself by adding its device ID to the devices PEP node.</p>
+    <p>It is REQUIRED to set the access model of the <tt>&nsdevices;</tt> node to ‘open’ to give entities without presence subscription read access to the devices and allow them to establish an OMEMO session. Not having presence subscription is a common occurrence on the first few messages between two contacts and can also happen fairly frequently in group chats when not every participant had prior communication with every other participant.</p>
     <p>The access model can be changed efficiently by using publish-options.</p>
     <p>The device element MAY contain an attribute called label, which is a user defined string describing the device that published that bundle. It is RECOMMENDED to keep the length of the label under 53 Unicode code points.</p>
-    <example caption='Adding the own device id to the list'><![CDATA[
+    <example caption='Adding the own device ID to the list'><![CDATA[
 <iq from='juliet@capulet.lit' type='set' id='announce1'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <publish node=']]>&nsdevices;<![CDATA['>
       <item id='current'>
         <devices xmlns=']]>&ns;<![CDATA['>
-          <device id='12345' label='Dino on Lenovo Thinkpad T495'/>
-          <device id='4223' />
-          <device id='31415' label='Conversations on Pixel 3' />
+          <device id='12345'/>
+          <device id='4223' label='Gajim on Ubuntu Linux'/>
+          <device id='31415' label='Conversations on Pixel 3'/>
         </devices>
       </item>
     </publish>
@@ -437,51 +450,29 @@
   </pubsub>
 </iq>]]></example>
     <p>NOTE: as per <link url='https://xmpp.org/extensions/xep-0060.html#impl-singleton'><cite>XEP-0060</cite> §12.20</link>, it is RECOMMENDED for the publisher to specify an ItemID of "current" to ensure that the publication of a new item will overwrite the existing item.</p>
-    <p>This step presents the risk of introducing a race condition: Two devices might simultaneously try to announce themselves, unaware of the other's existence. The second device would overwrite the first one. To mitigate this, devices MUST check that their own device id is contained in the list whenever they receive a PEP update from their own account. If they have been removed, they MUST reannounce themselves.</p>
+    <p>This step presents the risk of introducing a race condition: Two devices might simultaneously try to announce themselves, unaware of the other's existence. The second device would overwrite the first one. To mitigate this, devices MUST check that their own device ID is contained in the list whenever they receive a PEP update from their own account. If they have been removed, they MUST reannounce themselves.</p>
     </section3>
     <section3 topic='Bundles' anchor='bundles'>
-    <p>Furthermore, a device MUST publish its IdentityKey, a signed PreKey, and a list of PreKeys. This tuple is called a bundle and is provided by OMEMO libraries. Bundles are maintained as multiple items in a PEP node called <tt>&nsbundles;</tt>. Each bundle MUST be stored in a seperate item. The item id MUST be set to the device id.</p>
-    <p>A bundle is an element called 'bundle' in the <tt>&ns;</tt> namespace. It has a child element called ‘spk’ that contains the public part of the signed PreKey as base64 encoded data, a child element called ‘spks’ that contains the signed PreKey signature as base64 encoded data and a child element called ‘ik’ that contains the public part of the IdentityKey as base64 encoded data. PreKeys are multiple elements called ‘pk’ that each contain the public part of one PreKey as base64 encoded data. PreKeys are wrapped in an element called ‘prekeys’ which is a child of the bundle element. The ‘spk’ and the ‘pk’s are tagged with an ‘id’-attribute which is a positive integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0) that uniquely identifies the keys. The ‘spk’ and the ‘pk’s are considered separate, which means that an ‘spk’ can have the same ‘id’ as a ‘pk’. These ids are used to save bandwidth during key exchanges, which refer to the keys using their id instead of their full public parts.</p>
-    <p>When publishing bundles a client MUST make sure that the <tt>&nsbundles;</tt> node is configured to store multiple items. This is not the default with &xep0163;. If the node doesn’t exist yet it can be configured on the fly by using publish-options as described in <link url='https://xmpp.org/extensions/xep-0060.html#publisher-publish-options'><cite>XEP-0060</cite> §7.1.5</link>. The value for 'pubsub#max_items' in publish_options MUST be set to 'max'. If the node did exist and was configured differently the bundle publication will fail. Clients MUST then reconfigure the node as described in <link url='https://xmpp.org/extensions/xep-0060.html#owner-configure'><cite>XEP-0060</cite> §8.2</link>.</p>
+    <p>Furthermore, a device MUST publish its IdentityKey, a signed PreKey, and a list of PreKeys. This tuple is called a bundle and is provided by OMEMO libraries. Bundles are maintained as multiple items in a PEP node called <tt>&nsbundles;</tt>. Each bundle MUST be stored in a separate item. The item ID MUST be set to the device ID.</p>
+    <p>A bundle is an element called 'bundle' in the <tt>&ns;</tt> namespace. It has a child element called ‘spk’ that contains the public part of the signed PreKey as base64 encoded data, a child element called ‘spks’ that contains the signed PreKey signature as base64 encoded data and a child element called ‘ik’ that contains the public part of the IdentityKey as base64 encoded data. PreKeys are multiple elements called ‘pk’ that each contain the public part of one PreKey as base64 encoded data. PreKeys are wrapped in an element called ‘prekeys’ which is a child of the bundle element. The ‘spk’ and the ‘pk’s are tagged with an ‘id’-attribute which is a positive integer between 1 and 2^31 - 1 (the positive numbers of a signed 32 bit integer, without 0) that uniquely identifies the keys. The ‘spk’ and the ‘pk’s are considered separate, which means that an ‘spk’ can have the same ‘id’ as a ‘pk’. These IDs are used to save bandwidth during key exchanges, which refer to the keys using their ID instead of their full public parts.</p>
+    <p>When publishing bundles a client MUST make sure that the <tt>&nsbundles;</tt> node is configured to store multiple items. This is not the default with &xep0163;. If the node doesn’t exist yet it can be configured on the fly by using publish-options as described in <link url='https://xmpp.org/extensions/xep-0060.html#publisher-publish-options'><cite>XEP-0060</cite> §7.1.5</link>. The value for 'pubsub#max_items' in publish_options MUST be set to 'max'. If the node did exist and was configured differently, the bundle publication will fail. Clients MUST then reconfigure the node as described in <link url='https://xmpp.org/extensions/xep-0060.html#owner-configure'><cite>XEP-0060</cite> §8.2</link>.</p>
+  <p>As with the <tt>&nsdevices;</tt> node it is REQUIRED to set the access model of the <tt>&nsbundles;</tt> to open.</p>
+  <p>The access model can be changed efficiently by using publish-options.</p>
     <example caption='Publishing bundle information'><![CDATA[
 <iq from='juliet@capulet.lit' type='set' id='annouce2'>
   <pubsub xmlns='http://jabber.org/protocol/pubsub'>
     <publish node=']]>&nsbundles;<![CDATA['>
       <item id='31415'>
         <bundle xmlns=']]>&ns;<![CDATA['>
-          <spk id='0'>b64/encoded/data</spk>
+          <spk id='1'>b64/encoded/data</spk>
           <spks>b64/encoded/data</spks>
           <ik>b64/encoded/data</ik>
           <prekeys>
-            <pk id='0'>b64/encoded/data</pk>
             <pk id='1'>b64/encoded/data</pk>
+            <pk id='2'>b64/encoded/data</pk>
             <!-- … -->
             <pk id='99'>b64/encoded/data</pk>
           </prekeys>
-        </bundle>
-      </item>
-    </publish>
-    <publish-options>
-      <x xmlns='jabber:x:data' type='submit'>
-        <field var='FORM_TYPE' type='hidden'>
-          <value>http://jabber.org/protocol/pubsub#publish-options</value>
-        </field>
-        <field var='pubsub#max_items'>
-          <value>max</value>
-        </field>
-      </x>
-    </publish-options>
-  </pubsub>
-</iq>]]></example>
-  <p>As with the <tt>&nsdevices;</tt> node it is REQUIRED to set the access model of the <tt>&nsbundles;</tt> to open.</p>
-  <p>The access model can be changed efficiently by using publish-options.</p>
-  <example caption='Publishing bundle information with an open access model'><![CDATA[
-<iq from='juliet@capulet.lit' type='set' id='annouce2'>
-  <pubsub xmlns='http://jabber.org/protocol/pubsub'>
-    <publish node=']]>&nsbundles;<![CDATA['>
-      <item id='31415'>
-        <bundle xmlns=']]>&ns;<![CDATA['>
-          <!-- … -->
         </bundle>
       </item>
     </publish>
@@ -551,19 +542,19 @@
         The &envelope; element is encrypted as described in the section about <link url='#protocol-message_encryption'>Message Encryption</link>.
       </p>
       <p>
-        Clients MUST only consider the devices on the <tt>&nsdevices;</tt> node of each recipient (i.e. including their own devices node, but excluding itself).
+        Clients MUST only consider the devices on the <tt>&nsdevices;</tt> node of each recipient (i.e., the node of the sending device is excluded).
       </p>
     </section3>
     <section3 topic='Message structure description' anchor='message-structure-description'>
       <p>
-        An OMEMO encrypted message is specified to include an &lt;encrypted&gt; element in the <tt>&ns;</tt> namespace. It contains up to two child nodes, the &lt;header&gt; and the &payload; element. The &lt;header&gt; element must always be present, the &payload; element must be present unless an empty OMEMO message is sent, as described below.
-        The &lt;header&gt; element has an attribute named 'sid' referencing the device id of the sending device and contains one or multiple &lt;keys&gt; elements, each with an attribute 'jid' of one of the recipients bare JIDs, as well as one or multiple &lt;key&gt; elements.
-        A &lt;key&gt; element has an attribute named 'rid' referencing the device id of the recipient device, and an attribute named 'kex' which defaults to 'false' and indicates if the enclosed encrypted message includes a key exchange. The key and HMAC encrypted using the long-standing OMEMO session for that recipient device are encoded using base64 and placed as text content into the &lt;key&gt; element.
+        An OMEMO encrypted message is specified to include an &lt;encrypted&gt; element in the <tt>&ns;</tt> namespace. It contains up to two child nodes, the &lt;header&gt; and the &payload; element. The &lt;header&gt; element MUST always be present, the &payload; element MUST be present unless an empty OMEMO message is sent, as described below.
+        The &lt;header&gt; element has an attribute named 'sid' referencing the device ID of the sending device and contains one or multiple &lt;keys&gt; elements for each recipient. A &lt;keys&gt; element has an attribute 'jid' for the recipient's bare JID. Each &lt;keys&gt; element has one or multiple &lt;key&gt; elements.
+        A &lt;key&gt; element has an attribute named 'rid' referencing the ID of the recipient device as well as an attribute named 'kex' which defaults to 'false' and indicates whether the enclosed encrypted message includes a key exchange. The key and HMAC encrypted using the long-standing OMEMO session for that recipient device are encoded using base64 and placed as text content into the &lt;key&gt; element.
         The encrypted &envelope; element is encoded using base64 and placed as text content into the &payload; element.
       </p>
       <!-- TODO: <p>Note that following &rfc6120; (section 8.4.), clients MUST ignore XML attributes and elements that are qualified with an unknown namespace, in order to allow for protocol extensions.</p> (qualified attributes are evil, right?) -->
       <p>A special case are <em>empty</em> OMEMO messages, which are used in various places throughout the protocol purely to manage sessions and not to transfer content. With empty OMEMO messages, the step of creating and encrypting the &payload; element is skipped. Instead of encrypting the key and authentication tag of the &payload; ciphertext with the Double Ratchet session, 32 zero-bytes are encrypted with the Double Ratchet session directly. The resulting OMEMOKeyExchange or OMEMOAuthenticatedMessage are put into &lt;key&gt; elements as usual, but the &payload; element is omitted altogether, so that the &lt;encrypted&gt; element only contains a &lt;header&gt;.</p>
-      <example caption='Sending a message'><![CDATA[
+      <example caption='Message Structure'><![CDATA[
 <message to='juliet@capulet.lit' from='romeo@montague.lit' id='send1'>
   <encrypted xmlns=']]>&ns;<![CDATA['>
     <header sid='27183'>
@@ -585,7 +576,7 @@
     </section3>
   </section2>
   <section2 topic='Receiving a message' anchor='usecases-receiving'>
-    <p>When an OMEMO element is received, the client MUST check whether there is a &lt;keys&gt; element with a jid attribute matching its own bare jid and an inner &lt;key&gt; element with a rid attribute matching its own device id. If this is not the case the message was not encrypted for this particular device and a warning message SHOULD be displayed instead. If such an element exists, the client checks whether the element's contents are an OMEMOKeyExchange.</p>
+    <p>When an OMEMO element is received, the client MUST check whether there is a &lt;keys&gt; element with a jid attribute matching its own bare jid and an inner &lt;key&gt; element with a rid attribute matching its own device ID. If this is not the case the message was not encrypted for this particular device and a warning message SHOULD be displayed instead. If such an element exists, the client checks whether the element's contents are an OMEMOKeyExchange.</p>
     <p>If this is the case, a new session is built from this received element. The client MUST then republish their bundle information, replacing the used PreKey, such that it won't be used again by a different client. If the client already has a session with the sender's device, it MUST replace this session with the newly built session. The client MUST eventually delete the private key belonging to the PreKey after use (this is subject to the <link url='#business-rules'>Business rules</link>).</p>
     <p>If the element's contents are an OMEMOAuthenticatedMessage, and the client has a session with the sender's device, it tries to decrypt the OMEMOAuthenticatedMessage using this session. If the decryption fails or there is no session with the sending device, a warning message SHOULD be displayed instead. Also refer to the section about recovering from broken sessions in the <link url='#business-rules'>Business Rules</link>.</p>
     <p>
@@ -682,8 +673,8 @@
     </section3>
   </section2>
 </section1>
-<section1 topic='Business Rules' anchor='rules'>
-  <p>Before publishing a freshly generated device id for the first time, a device MUST check whether that device id already exists, and if so, generate a new one.</p>
+<section1 topic='Business Rules' anchor='business-rules'>
+  <p>Before publishing a freshly generated device ID for the first time, a device MUST check whether that device ID already exists, and if so, generate a new one.</p>
   <p>Clients SHOULD NOT immediately fetch the bundle and build a session as soon as a new device is announced. Before the first message is exchanged, the contact does not know which PreKey has been used (or, in fact, that any PreKey was used at all). As they have not had a chance to remove the used PreKey from their bundle announcement, this could lead to collisions where both Alice and Bob pick the same PreKey to build a session with a specific device. As each PreKey SHOULD only be used once, the party that sends their initial OMEMOKeyExchange later loses this race condition. This means that they think they have a valid session with the contact, when in reality their messages MAY be ignored by the other end. By postponing building sessions, the chance of such issues occurring can be drastically reduced. It is RECOMMENDED to construct sessions only immediately before sending a message.</p>
   <p>After receiving an OMEMOKeyExchange and successfully building a new session, the receiving device SHOULD automatically respond with an empty OMEMO message (as per <link url='#usecases-messagesend'>Sending a message</link>) to the source of the OMEMOKeyExchange. This is to notify the device that the session initiation was completed successfully and that the device can stop sending OMEMOKeyExchanges.</p>
   <p>When receiving a message that is not an OMEMOKeyExchange from a device there is no session with, clients SHOULD create a session with that device and notify it about the new session by responding with an empty OMEMO message as per <link url='#usecases-messagesend'>Sending a message</link>.</p>
@@ -691,7 +682,7 @@
   <p>If an OMEMOKeyExchange is received as part of a message catch-up mechanism (like &xep0313;) and used to establish a new session with the sender, the client SHOULD postpone deletion of the private key corresponding to the used PreKey until after the catch-up is completed. If this is done, the client MUST send an OMEMO encrypted message with empty SCE payload right after the key exchange is completed, to forward the ratchet and to move away from the possibly double-used PreKey. This practice can mitigate the previously mentioned race condition by preventing message loss.</p>
   <p>OMEMO's forward secrecy and backup/restore mechanisms don't play well together. Restoring old data can lead to desynchronized, "broken" sessions. Because these cases exist, clients MUST offer a way to manually replace broken sessions. It is advisable to have a session replacement option per recipient/per chat, if applicable. Otherwise, at least an application-global session reset MUST be available.</p>
   <p>When a client receives the first message for a given ratchet key with a counter of 53 or higher, it MUST send a heartbeat message. Heartbeat messages are empty OMEMO messages as per <link url='#usecases-messagesend'>Sending a message</link>. These heartbeat messages cause the ratchet to forward, thus consequent messages will have the counter restarted from 0.</p>
-  <p>When a client receives a message from a device id that is not on the device list, it SHOULD try to retrieve that user's devices node directly to ensure their local cached version of the devices list is up-to-date.</p>
+  <p>When a client receives a message from a device ID that is not on the device list, it SHOULD try to retrieve that user's devices node directly to ensure their local cached version of the devices list is up-to-date.</p>
   <p>When the user of a client deactivates OMEMO for an account or globally, the client SHOULD delete the corresponding bundles and device ids from the PEP nodes. That way other clients should stop encrypting for that account.</p>
 </section1>
 <section1 topic='Implementation Notes' anchor='impl'>
