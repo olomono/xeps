@@ -37,9 +37,15 @@
   &ksmithisode;
   &skille;
   <revision>
+    <version>0.1.3</version>
+    <date>2023-10-16</date>
+    <initials>melvo</initials>
+    <remark><p>Fix spelling</p></remark>
+  </revision>
+  <revision>
     <version>0.1.2</version>
     <date>2020-11-03</date>
-    <initials>gh/@melvo</initials>
+    <initials>melvo</initials>
     <remark><p>Fix various typos</p></remark>
   </revision>
   <revision>
@@ -223,7 +229,7 @@
       </p>
     </section1>
     <section1 topic='Inviting another User to join a Channel that the user does not have Permission to Join' anchor='usecase-user-invite'>
-      <p> Invitation by reference, as described in the previous section, is a convenient approach to invite a user to join a channel that the user has permission to join.   This section describes the approach used when the inviter has permission to grant rights for the invitee to become a channel participant.   This might be because the inviter is an administrator of the channel or the channel  or if the inviter is a channel participant and the channel allows invitation by participants (this channel capability is controlled by the channel configuration variable 'Participation Addition by Invitation from Participant').   Invitation by reference is used to avoid cluttering the allowed node with JIDs of users who are invited to join, but do not accept the invitation.
+      <p> Invitation by reference, as described in the previous section, is a convenient approach to invite a user to join a channel that the user has permission to join.   This section describes the approach used when the inviter has permission to grant rights for the invitee to become a channel participant.   This might be because the inviter is an administrator of the channel or if the inviter is a channel participant and the channel allows invitation by participants (this channel capability is controlled by the channel configuration variable 'Participation Addition by Invitation from Participant').   Invitation by reference is used to avoid cluttering the allowed node with JIDs of users who are invited to join, but do not accept the invitation.
         When a channel participant (the inviter) invites  another user (the invitee) to join a channel, the following sequence of steps is followed:
 
       </p>
